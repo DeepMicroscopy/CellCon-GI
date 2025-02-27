@@ -18,7 +18,7 @@ to support research in this underexplored field.
 ```
 
 ## Pipeline overview
-![Atypical_MICCAI_Figure1](https://github.com/user-attachments/assets/4cb3545b-19c1-4a6c-a0ac-e36bbce5a6c3)
+![Atypical_MICCAI_Figure1](https://github.com/user-attachments/assets/6f72dda6-9892-4209-a97e-7ff04f641421)
 
 ## Usage notes
 Please find our datasets in the respective folders
