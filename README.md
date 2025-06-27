@@ -1,5 +1,5 @@
 # CellCon-GI
-Code for the paper 'Cellular Morphology-Conditioned Generative Inpainting for Atypical Mitosis Classification'
+Code for the paper **'Cellular Morphology-Conditioned Generative Inpainting for Atypical Mitosis Classification'**
 
 Abstract:
 ```
