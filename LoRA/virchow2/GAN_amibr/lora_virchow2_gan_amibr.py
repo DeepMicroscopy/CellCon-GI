@@ -15,7 +15,7 @@ from peft import get_peft_model, LoraConfig
 from timm.layers import SwiGLUPacked
 
 # Logging setup
-log_file = "uni2_lora_diffusion_cmc_training.log"
+log_file = "virchow2_lora_gan_amibr_training.log"
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Hugging Face login
-login(token="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")
+login(token="your_huggingface_token_here")  # Replace with your Hugging Face token
 
 # LoRA config
 lora_config = LoraConfig(
@@ -87,7 +87,7 @@ def load_image_paths_from_folder(root_dir):
     return image_paths, labels
 
 # Data
-root_data_dir = '/data/MELBA-AmiBr/TriCon-GI/downstream_classification/Amibr_diffusion_synthetic_train_set/CMCmodel_CMCdataset'
+root_data_dir = '/data/MELBA-AmiBr/TriCon-GI/downstream_classification/AMI-Br_Synthetic_Train_Set_img_amibr_mask_amibr_gan_amibr'
 images, labels = load_image_paths_from_folder(root_data_dir)
 
 # Hyperparameters
@@ -103,23 +103,14 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(images, labels)):
     logger.info(f"Starting Fold {fold + 1}")
 
     base_model = create_model(
-        "hf-hub:MahmoodLab/UNI2-h",
-        pretrained=True,
-        img_size=224,
-        patch_size=14,
-        depth=24,
-        num_heads=24,
-        embed_dim=1536,
-        init_values=1e-5,
-        mlp_ratio=2.66667 * 2,
-        num_classes=1,
-        no_embed_class=True,
-        mlp_layer=SwiGLUPacked,
-        act_layer=torch.nn.SiLU,
-        reg_tokens=8,
-        dynamic_img_size=True
+        "hf-hub:paige-ai/Virchow2", 
+        pretrained=True, 
+        mlp_layer=SwiGLUPacked, 
+        act_layer=torch.nn.SiLU
     )
+    base_model.reset_classifier(num_classes=1)
     base_model = base_model.to(device)
+
     model = get_peft_model(base_model, lora_config)
     model.print_trainable_parameters()
 
@@ -139,7 +130,7 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(images, labels)):
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=3, min_lr=1e-7, verbose=True)
 
     best_val_acc = 0.0
-    best_model_path = f'uni2_lora_diffusion_cmc_fold_{fold + 1}_best.pth'
+    best_model_path = f'virchow2_lora_gan_amibr_fold_{fold + 1}_best.pth'
     epochs_no_improve = 0
 
     for epoch in range(num_epochs):
@@ -158,7 +149,7 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(images, labels)):
                 outputs = outputs.unsqueeze(1)
             elif outputs.ndim == 2 and outputs.size(1) != 1:
                 outputs = outputs[:, :1]
-
+            
             loss = criterion(outputs, labels_batch)
             loss.backward()
             optimizer.step()

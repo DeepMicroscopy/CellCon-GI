@@ -15,7 +15,7 @@ from peft import get_peft_model, LoraConfig
 from timm.layers import SwiGLUPacked
 
 # Logging setup
-log_file = "uni2_lora_gan_amibr_training.log"
+log_file = "uni2_lora_gan_cmc_training.log"
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Hugging Face login
-login(token="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")
+login(token="your_huggingface_token_here")  # Replace with your Hugging Face token
 
 # LoRA config
 lora_config = LoraConfig(
@@ -87,7 +87,7 @@ def load_image_paths_from_folder(root_dir):
     return image_paths, labels
 
 # Data
-root_data_dir = '/data/MELBA-AmiBr/TriCon-GI/downstream_classification/AMI-Br_Synthetic_Train_Set_img_amibr_mask_amibr_gan_amibr'
+root_data_dir = '/data/MELBA-AmiBr/TriCon-GI/downstream_classification/AMI-Br_Synthetic_Train_Set_img_CMC_mask_amibr_gan_cmc'
 images, labels = load_image_paths_from_folder(root_data_dir)
 
 # Hyperparameters
@@ -139,7 +139,7 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(images, labels)):
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=3, min_lr=1e-7, verbose=True)
 
     best_val_acc = 0.0
-    best_model_path = f'uni2_lora_gan_amibr_fold_{fold + 1}_best.pth'
+    best_model_path = f'uni2_lora_gan_cmc_fold_{fold + 1}_best.pth'
     epochs_no_improve = 0
 
     for epoch in range(num_epochs):
