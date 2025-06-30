@@ -12,9 +12,8 @@ the utilization of large-scale datasets that do not contain atypical subclassifi
 allows to train generative approaches on much larger dataset scales. We evaluate both adversarial
 and diffusion-based inpainting strategies. Our approach effectively mitigates the lack of data
 diversity in training and label noise, thereby substantially improving classification performance
-for atypical vs. normal mitoses (0.865 vs. 0.789 in balanced accuracy). Additionally, we release
-two new multi-domain atypical vs. normal mitosis datasets, used as hold out sets in our study,
-to support research in this underexplored field.
+for atypical vs. normal mitoses (0.865 vs. 0.789 in balanced accuracy).
+
 ```
 
 ## Pipeline overview
